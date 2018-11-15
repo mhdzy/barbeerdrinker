@@ -1,0 +1,12 @@
+name: barbeerdrinker
+title: barbeerdrinker
+username:
+account: matthewhandzy
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 539835
+bundleId: 1668874
+url: https://matthewhandzy.shinyapps.io/barbeerdrinker/
+when: 1540789530.98059
+asMultiple: FALSE
+asStatic: FALSE
