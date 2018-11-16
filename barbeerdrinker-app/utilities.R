@@ -63,6 +63,7 @@ get_tbl_mod <- function(query) {
 
 # ensures the proper installation & loading of R packages
 ensure_pkgs <- function() {
+  if (!require(formattable))  { install.packages("formattable");  require(formattable)    }
   if (!require(markdown))     { install.packages("markdown");     require(markdown)       }
   if (!require(tidyverse))    { install.packages("tidyverse");    require(tidyverse)      }
   if (!require(pool))         { install.packages("pool");         require(pool)           }
@@ -249,8 +250,6 @@ g_beers_topbars <- function(beer, n) {
     mutate(count = sum(quantity)) %>% 
     group_by(count, add = T) %>% 
     summarise() %>% 
-    ungroup() %>% 
-    arrange(desc(count)) %>% 
     top_n(n, count)
   
   p <- tmp %>%
@@ -284,7 +283,6 @@ g_beers_topdrinkers <- function(beer, n) {
     group_by(count, add = T) %>% 
     summarise() %>% 
     ungroup() %>% 
-    arrange(desc(count)) %>% 
     top_n(n, count)
   
   p <- tmp %>%
@@ -336,7 +334,8 @@ t_drinkers_tsns <- function(drinker) {
     group_by(bar_name) %>% 
     arrange(bar_name, transaction_time)
   
-  return(tmp)
+  return(formattable(tmp,
+                     area(col = c(subtotal, tip, total)) ~ normalize_bar("pink", 0.2)))
   
 }
 
@@ -346,7 +345,7 @@ t_drinkers_tid <- function(t_id) {
   
   ensure_tbls()
   
-  return(bills %>% subset(bills$transaction_id %in% tbl_df(t_id)[[1]]))
+  return(formattable(bills %>% subset(bills$transaction_id %in% tbl_df(t_id)[[1]])))
   
 }
 

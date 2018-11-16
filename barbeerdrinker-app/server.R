@@ -15,8 +15,15 @@ ensure_tbls()
 # server function
 server <- function(input, output, session) {
 
-  output$distPlot <- renderPlot({
-    hist(rnorm(input$obs), col = 'darkgray', border = 'white')
+  # reactive functions (modification & sql query pages)
+  
+  update_mod_msg <- eventReactive(input$mod_confirm_bttn, {
+    # rules and logic!
+    get_tbl_mod(input$mod_query)
+  })
+  
+  update_sql_table <- eventReactive(input$sql_confirm_bttn, {
+    get_tbl(input$sql_query)
   })
   
   # bars page
@@ -41,9 +48,9 @@ server <- function(input, output, session) {
   output$drinkersTable <- renderDataTable(get_tbl("select * from drinkers"))
 
   # modification page
-  output$mod_status <- renderDataTable(get_tbl_mod(input$mod_query))
+  output$mod_status <- renderDataTable(update_mod_msg())
   
   # custom sql input page
-  output$customSQLTable <- renderDataTable(get_tbl(input$sql_query))
+  output$customSQLTable <- renderDataTable(update_sql_table())
 
 }

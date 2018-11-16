@@ -21,10 +21,10 @@ ui <- tagList(fluidPage(
       
   navbarPage("barbeerdrinker!",
   
-    # ---------- about page ---------- #
-    tabPanel("about",
+    # ---------- landing page ---------- #
+    tabPanel("home",
       fluidRow(
-          includeMarkdown("www/README.rmd")
+        setBackgroundImage(src = "www/landing_background.jpg")
       )         
     ),
     
@@ -292,11 +292,11 @@ ui <- tagList(fluidPage(
       
       "modification",
       
-      fluidRow(
-        h5("input custom MySQL DML command")
-      ),
+      img(src='mod_header.png', 
+          align = "center",
+          width = "100%"),
       
-      tags$br(),
+      tags$br(), tags$br(), tags$br(),
       
       fluidRow(
         column(1, dropdownButton(includeMarkdown("www/mod_dropdown.md"),
@@ -304,19 +304,27 @@ ui <- tagList(fluidPage(
                        status = "danger",
                        icon = icon("question-circle"),
                        width = "500px",
-                       tooltip = tooltipOptions(title = "click for DML command usage"))),
+                       tooltip = tooltipOptions(title = "click for DML command usage"))
+          ),
         
-        column(6,
+        column(8,
           textAreaInput("mod_query",
-                      "custom sql modification query",
-                      "alter table tbl_name\nadd column_name data_type",
-                      width = "124%",
+                      "click ? for dml command usage",
+                      "insert into table_name (column1, column2, ..., column_n)\nvalues (value1, value2, ..., value_n)",
+                      width = "150%",
                       rows = 3
                       )
+        ),
+        
+        column(2,
+               actionBttn(inputId = "mod_confirm_bttn",
+                          label = "confirm",
+                          style = "unite",
+                          color = "danger")
         )
-    
-      )
+      ), # end fluidrow
       
+      dataTableOutput("mod_status")
     
     ), # end tabpanel modification
     
@@ -325,20 +333,49 @@ ui <- tagList(fluidPage(
       
       "sql interface",
              
-      tags$br(),
+      img(src='sql_header.png', 
+          align = "center",
+          width = "100%"),
+      
+      tags$br(), tags$br(), tags$br(),
+      
+      
              
       fluidRow(
-        textAreaInput("sql_query",
-                      "custom sql query",
-                      "select *\nfrom barbeerdrinker.bars\nwhere city = 'New York'",
-                      width = "124%",
-                      rows = 3
-                      ),
-        dataTableOutput("customSQLTable")
-      )
+        column(1, dropdownButton(includeMarkdown("www/sql_dropdown.md"),
+                                 circle = T,
+                                 status = "primary",
+                                 icon = icon("question-circle"),
+                                 width = "500px",
+                                 tooltip = tooltipOptions(title = "click for available tables"))
+        ),
+        column(5,
+          textAreaInput("sql_query",
+                        "custom sql query",
+                        "select *\nfrom barbeerdrinker.bars\nwhere city = 'New York'",
+                        width = "124%",
+                        rows = 3
+                        )
+        ),
+        column(2,
+               actionBttn(inputId = "sql_confirm_bttn",
+                          label = "confirm",
+                          style = "unite",
+                          color = "success")
+        )
+      ),
       
-    ) # end tabpanel sql interface
+      dataTableOutput("customSQLTable")
+      
+    ), # end tabpanel sql interface
     
-  )
+    # ---------- readme page ---------- #
+    tabPanel("readme",
+             fluidRow(
+               includeHTML("www/README2.html")
+             )         
+    ) # end readme page
+    
+  ) # end navbarpage
                 
-))
+)) # end taglist, fluidpage
