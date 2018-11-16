@@ -307,7 +307,7 @@ ui <- tagList(fluidPage(
                        tooltip = tooltipOptions(title = "click for DML command usage"))
           ),
         
-        column(8,
+        column(6,
           textAreaInput("mod_query",
                       "click ? for dml command usage",
                       "insert into table_name (column1, column2, ..., column_n)\nvalues (value1, value2, ..., value_n)",
