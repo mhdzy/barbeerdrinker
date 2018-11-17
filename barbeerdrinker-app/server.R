@@ -14,6 +14,10 @@ ensure_tbls()
 
 # server function
 server <- function(input, output, session) {
+  
+  bar_limit <- 10
+  beer_limit <- 10
+  drinker_limit <- 25
 
   # reactive functions (modification & sql query pages)
   
@@ -27,28 +31,31 @@ server <- function(input, output, session) {
   })
   
   # bars page
-  output$bars_hours <- renderTimevis(tv_bars_hours(input$bar_selection, 10))
-  output$bars_topdrinkers <- renderPlot(g_bars_topspenders(input$bar_selection, 10))
-  output$bars_topbeers <- renderPlot(g_bars_topbeers(input$bar_selection, 10))
-  output$bars_topmanfs <- renderPlot(g_bars_topmanfs(input$bar_selection, 10))
+  output$bars_hours <- renderTimevis(tv_bars_hours(input$bar_selection, bar_limit))
+  output$bars_topdrinkers <- renderPlot(g_bars_topspenders(input$bar_selection, bar_limit))
+  output$bars_topbeers <- renderPlot(g_bars_topbeers(input$bar_selection, bar_limit))
+  output$bars_topmanfs <- renderPlot(g_bars_topmanfs(input$bar_selection, bar_limit))
   output$barsTable <- renderDataTable(get_tbl("select * from bars"))
 
   # beers page
-  output$beers_topbars <- renderPlot(g_beers_topbars(input$beer_selection, 10))
-  output$beers_topdrinkers <- renderPlot(g_beers_topdrinkers(input$beer_selection, 10))
-  output$beers_toptime <- renderPlot(g_beers_toptimeseries(input$beer_selection, 10))
+  output$beers_topbars <- renderPlot(g_beers_topbars(input$beer_selection, beer_limit))
+  output$beers_topdrinkers <- renderPlot(g_beers_topdrinkers(input$beer_selection, beer_limit))
+  output$beers_toptime <- renderPlot(g_beers_toptimeseries(input$beer_selection, beer_limit))
   output$beersTable <- renderDataTable(get_tbl("select * from beers"))
 
   # drinkers page
   output$drinkersLookupTable <- renderDataTable(t_drinkers_lookup(input$lookup_query))
   output$drinkers_tsns <- renderDataTable(t_drinkers_tsns(input$drinker_selection))
   output$drinkers_tid <- renderDataTable(t_drinkers_tid(input$t_id))
-  output$drinkers_topbeers <- renderPlot(g_drinkers_beers(input$drinker_selection, 10))
+  output$drinkers_topbeers <- renderPlot(g_drinkers_beers(input$drinker_selection, drinker_limit))
   output$drinkers_timeseries <- renderPlot(g_drinkers_timeseries(input$drinker_selection))
   output$drinkersTable <- renderDataTable(get_tbl("select * from drinkers"))
 
   # modification page
-  output$mod_status <- renderDataTable(update_mod_msg())
+  output$mod_status <- renderDataTable(
+    #update_mod_msg()
+    get_tbl("select name as DO_NOT, name as EXECUTE_UPDATES, name as PLEASE from beers where name = 'Bud Lite'")
+  )
   
   # custom sql input page
   output$customSQLTable <- renderDataTable(update_sql_table())
