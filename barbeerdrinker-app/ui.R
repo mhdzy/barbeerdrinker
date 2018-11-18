@@ -15,7 +15,7 @@ ensure_tbls()
 # __GLOBALVARS__
 bar_limit <- 10
 beer_limit <- 10
-drinker_limit <- 25
+drinker_limit <- 5
 
 ui <- tagList(fluidPage(
 
@@ -50,6 +50,13 @@ ui <- tagList(fluidPage(
                       ),
                       selected = bars$name[1:bar_limit],
                       multiple = TRUE),
+          
+          radioGroupButtons(inputId = "bar_color_selection",
+                            label = "color",
+                            choices = c("YES", "NO"),
+                            selected = "NO",
+                            status = "success"
+          ),
           width = 3
         ),
 
@@ -59,17 +66,7 @@ ui <- tagList(fluidPage(
             type = "tabs",
 
             tabPanel(
-              "hours",
-
-              tags$br(),
-
-              fluidRow(
-
-              )
-            ),
-
-            tabPanel(
-              "top drinkers @ bar(s)",
+              "top drinkers",
 
               tags$br(),
 
@@ -79,7 +76,7 @@ ui <- tagList(fluidPage(
             ),
 
             tabPanel(
-              "top beers @ bar(s)",
+              "top beers",
 
               tags$br(),
 
@@ -89,12 +86,31 @@ ui <- tagList(fluidPage(
             ),
 
             tabPanel(
-              "top manfs @ bar(s)",
+              "top manfs",
 
               tags$br(),
 
               fluidRow(
                 plotOutput("bars_topmanfs")
+              )
+            ),
+            
+            tabPanel(
+              "timeseries",
+              
+              tags$br(),
+              
+              radioGroupButtons(
+                inputId = "bars_dywk",
+                label = "day/week selector",
+                choices = c("day", 
+                            "week"),
+                selected = "day",
+                status = "danger"
+              ),
+              
+              fluidRow(
+                plotOutput("bars_timeseries")
               )
             ),
 
@@ -129,6 +145,12 @@ ui <- tagList(fluidPage(
                       ),
                       selected = beers$name[4:(4+beer_limit-1)],
                       multiple = TRUE),
+          radioGroupButtons(inputId = "beer_color_selection",
+                            label = "color",
+                            choices = c("YES", "NO"),
+                            selected = "NO",
+                            status = "success"
+          ),
           width = 3
         ), # end sidebar panel
 
@@ -163,7 +185,7 @@ ui <- tagList(fluidPage(
               tags$br(),
 
               fluidRow(
-                plotOutput("bars_toptime")
+                plotOutput("beers_timeseries")
               )
             ), # end tabpanel top selling time
 
@@ -198,6 +220,12 @@ ui <- tagList(fluidPage(
                       ),
                       selected = drinkers$name[1:drinker_limit],
                       multiple = TRUE),
+          radioGroupButtons(inputId = "drinker_color_selection",
+                            label = "color",
+                            choices = c("YES", "NO"),
+                            selected = "NO",
+                            status = "success"
+          ),
           width = 3
         ), # end sidebar panel
 

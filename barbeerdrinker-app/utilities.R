@@ -127,12 +127,13 @@ tv_bars_hours <- function(bar, n) {
 
 # bar graph for top drinkers who are largest spenders (by dollar)
 # requires: transactions
-g_bars_topspenders <- function(bar, n) {
+g_bars_topspenders <- function(bar, n, clr) {
   
   ensure_tbls()
   
   # computes top drinkers
-  tmp <- tsns %>%
+  tmp <- 
+    tsns %>%
     filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
     group_by(drinker_name) %>% 
     mutate(drinker_total = sum(total)) %>% 
@@ -143,7 +144,8 @@ g_bars_topspenders <- function(bar, n) {
     select(drinker_name)
   
   # computes $ amount spent per bar
-  tmp <- tsns %>% 
+  tmp <- 
+    tsns %>% 
     filter(drinker_name %in% tmp$drinker_name) %>% 
     filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
     group_by(drinker_name, bar_name) %>% 
@@ -151,32 +153,37 @@ g_bars_topspenders <- function(bar, n) {
     ungroup()
   
   # plots output
-  p <- tmp %>%
+  p <- 
+    tmp %>%
     arrange(desc(drinker_total)) %>%
     ggplot(aes(x = drinker_name, y = drinker_total)) +
-    geom_bar(stat = "identity",
-             aes(fill = bar_name)) +
     labs(title = "Drinkers Who Are Largest Spenders",
          caption = "spenders calculated by $ amount spent",
          x = "drinker name",
-         y = "total $ spent") +
+         y = "total expenditures ($)") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     theme(plot.title = element_text(hjust = 0.5))
   
   rm(tmp)
   
-  return(p)
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = bar_name)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
   
 }
 
 # bar graph for beers which are most popular
 # requires: beers, bills, tsns
-g_bars_topbeers <- function(bar, n) {
+g_bars_topbeers <- function(bar, n, clr) {
   
   ensure_tbls()
   
   # computes most popular beers
-  tmp <- left_join(bills, tsns, by = "transaction_id") %>% 
+  tmp <- 
+    left_join(bills, tsns, by = "transaction_id") %>% 
     filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
     filter(item %in% beers$name) %>%
     group_by(item) %>%
@@ -187,7 +194,8 @@ g_bars_topbeers <- function(bar, n) {
     top_n(n)
   
   # assigns bar distributions of beer sales
-  tmp <- left_join(bills, tsns, by = "transaction_id") %>% 
+  tmp <- 
+    left_join(bills, tsns, by = "transaction_id") %>% 
     filter(item %in% tmp$item) %>% 
     filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
     group_by(item, bar_name) %>% 
@@ -198,11 +206,10 @@ g_bars_topbeers <- function(bar, n) {
            sales = item_total)
     
   # plots output
-  p <- tmp %>%
+  p <- 
+    tmp %>%
     arrange(desc(sales)) %>% 
     ggplot(aes(x = item, y = sales)) +
-    geom_bar(stat = "identity",
-             aes(fill = bar_name)) +
     labs(title = "Most Popular Beers",
          caption = "popularity calculated by total sales in dollars",
          x = "beer name",
@@ -212,18 +219,24 @@ g_bars_topbeers <- function(bar, n) {
   
   rm(tmp)
   
-  return(p)
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = bar_name)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
   
 }
 
 # bar graph for manufacturers who sell the most beers
 # requires: beers, bills
-g_bars_topmanfs <- function(bar, n) {
+g_bars_topmanfs <- function(bar, n, clr) {
   
   ensure_tbls()
   
   # computes total beer sales per bar
-  tmp <- left_join(bills, tsns, by = "transaction_id") %>% 
+  tmp <- 
+    left_join(bills, tsns, by = "transaction_id") %>% 
     filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
     filter(item %in% beers$name) %>%
     group_by(item, bar_name) %>%
@@ -247,14 +260,16 @@ g_bars_topmanfs <- function(bar, n) {
     summarise()
   
   # side-calculation of top performing manf's
-  tmp2 <- tmp %>% 
+  tmp2 <- 
+    tmp %>% 
     group_by(manf) %>% 
     summarise(total = sum(total)) %>% 
     arrange(desc(total)) %>% 
     top_n(n)
     
   # merges top performing manf's with bar sales
-  tmp <- tmp %>% 
+  tmp <- 
+    tmp %>% 
     filter(manf %in% tmp2$manf) %>% 
     left_join(tmp2, by = "manf") %>% 
     select(name = manf, 
@@ -263,11 +278,10 @@ g_bars_topmanfs <- function(bar, n) {
            sales = total.y)
   
   # plots output
-  p <- tmp %>%
+  p <- 
+    tmp %>%
     arrange(desc(sales)) %>% 
     ggplot(aes(x = name, y = sales)) +
-    geom_bar(stat = "identity",
-             aes(fill = bar_name)) +
     labs(title = "Most Popular Manufacturers",
          caption = "popularity calculated by total sales in dollars",
          x = "manufacturer name",
@@ -277,20 +291,104 @@ g_bars_topmanfs <- function(bar, n) {
   
   rm(tmp)
   
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = bar_name)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
+  
+}
+
+# wrapper for g_b_t_day and g_b_t_week
+g_bars_timeseries <- function(bar, n, clr, status) {
+  
+  if (status == "day") {
+    return(g_bars_timeseries_day(bar, n, clr))
+  } else if (status == "week") {
+    return(g_bars_timeseries_week(bar, n, clr))
+  } else {
+    return ("error lol")
+  }
+  
+}
+
+# demonstrate time distribution of sales, show what are the busiest periods of the day and of the week
+# requires: transactions
+g_bars_timeseries_day <- function(bar, n, clr) {
+  
+  tmp <- 
+    tsns %>% 
+    filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
+    mutate(datetime = lubridate::ymd_hms(paste(date, time))) %>% 
+    select(datetime) %>% 
+    group_by(hour = lubridate::hour(datetime)) %>% 
+    count() %>% 
+    ungroup() %>% 
+    mutate(datetime = lubridate::ymd_hms(paste("2019-01-01", paste0(hour, ":00:00")))) %>% 
+    select(datetime,
+           totaltsns = n)
+  
+  p <- 
+    tmp %>% 
+    ggplot(aes(x = datetime, y = totaltsns)) +
+    geom_bar(stat = "identity") +
+    scale_x_datetime(date_labels = "%H:%M") +
+    labs(title = "Timeseries of Most Popular Hours",
+         caption = "popular calculated by total transactions / hour",
+         x = "drinker name",
+         y = "total transactions count") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  rm(tmp)
+  
   return(p)
   
 }
+
+g_bars_timeseries_week <- function(bar, n, clr) {
+  
+  tmp <- 
+    tsns %>% 
+    filter(bar_name %in% tbl_df(bar)[[1]]) %>% 
+    mutate(datetime = lubridate::ymd_hms(paste(date, time))) %>% 
+    select(datetime) %>% 
+    group_by(week = lubridate::wday(datetime, label = T)) %>% 
+    count() %>% 
+    ungroup() %>% 
+    select(week,
+           totaltsns = n)
+  
+  p <- 
+    tmp %>% 
+    ggplot(aes(x = week , y = totaltsns)) +
+    geom_bar(stat = "identity") +
+    labs(title = "Timeseries of Most Popular Days of the Week",
+         caption = "popular calculated by total transactions / day",
+         x = "day",
+         y = "total transactions count") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  rm(tmp)
+  
+  return(p)
+  
+}
+
 
 # ========== ========== beers ========== ========== #
 
 # given a beer, show bars where this beer sells the most (again only top)
 # requires: bills, transactions
-g_beers_topbars <- function(beer, n) {
+g_beers_topbars <- function(beer, n, clr) {
   
   ensure_tbls()
   
   # compute top bar (sellers) of this beer
-  tmp <- left_join(filter(bills, item %in% tbl_df(beer)[[1]]), 
+  tmp <- 
+    left_join(filter(bills, item %in% tbl_df(beer)[[1]]), 
                    tsns,
                    by = "transaction_id") %>% 
     select(bar_name, item, quantity, price) %>% 
@@ -307,7 +405,8 @@ g_beers_topbars <- function(beer, n) {
     top_n(n)
   
   # compute beer sales at these bars
-  tmp <- left_join(filter(bills, item %in% tbl_df(beer)[[1]]), 
+  tmp <- 
+    left_join(filter(bills, item %in% tbl_df(beer)[[1]]), 
                     tsns,
                     by = "transaction_id") %>% 
     filter(bar_name %in% tmp$bar_name) %>% 
@@ -316,11 +415,10 @@ g_beers_topbars <- function(beer, n) {
     summarise(sales = sum(quantity*price))
   
   # plot output
-  p <- tmp %>%
+  p <- 
+    tmp %>%
     arrange(desc(sales)) %>% 
     ggplot(aes(x = bar_name, y = sales)) +
-    geom_bar(stat = "identity",
-             aes(fill = item)) +
     labs(title = "Top Bars Which Sell Your Beer(s)",
          caption = "top bars calculated by total sales in dollars for beers in list",
          x = "bar name",
@@ -330,18 +428,24 @@ g_beers_topbars <- function(beer, n) {
   
   rm(tmp)
   
-  return(p)
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = item)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
   
 }
 
 # given a beer, show also drinkers who are the biggest consumers of this beer
 # requires: bills, transactions
-g_beers_topdrinkers <- function(beer, n) {
+g_beers_topdrinkers <- function(beer, n, clr) {
   
   ensure_tbls()
   
   # compute drinkers order # per bar per drink
-  tmp <- left_join(filter(bills, item %in% tbl_df(beer)[[1]]), 
+  tmp <- 
+    left_join(filter(bills, item %in% tbl_df(beer)[[1]]), 
                    tsns, 
                    by = "transaction_id") %>% 
     select(drinker_name, item, quantity) %>% 
@@ -354,22 +458,23 @@ g_beers_topdrinkers <- function(beer, n) {
     ungroup()
   
   # get top drinkers
-  tmp2 <- tmp %>%
+  tmp2 <- 
+    tmp %>%
     group_by(drinker_name, total) %>% 
     summarise() %>%
     ungroup() %>% 
     top_n(n)
   
   # filter top drinkers
-  tmp <- tmp %>% 
+  tmp <- 
+    tmp %>% 
     filter(drinker_name %in% tmp2$drinker_name)
   
   # plot output
-  p <- tmp %>%
+  p <- 
+    tmp %>%
     arrange(desc(total)) %>% 
     ggplot(aes(x = drinker_name, y = total)) +
-    geom_bar(stat = "identity",
-             aes(fill = item)) +
     labs(title = "Top Drinkers Who Drink Your Beer(s)",
          caption = "top drinkers calculated by total sales volume",
          x = "drinker name",
@@ -379,16 +484,57 @@ g_beers_topdrinkers <- function(beer, n) {
   
   rm(tmp)
   
-  return(p)
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = item)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
   
 }
 
 # given a beer, show time distribution of when this beer sells the most
-g_beers_toptimeseries <- function(beer, n) {
+g_beers_timeseries <- function(beer, n, clr) {
   
   ensure_tbls()
   
-  # TODO
+  # beer sells most = most 
+  
+  tmp <- 
+    left_join(bills, 
+            tsns, 
+            by = "transaction_id") %>% 
+    filter(item %in% tbl_df(beer)[[1]]) %>% 
+    select(item, quantity, time, date) %>% 
+    mutate(datetime = lubridate::ymd_hms(paste(date, time))) %>% 
+    select(item, quantity, datetime) %>% 
+    group_by(hour = lubridate::hour(datetime)) %>% 
+    mutate(totalsales = sum(quantity)) %>% 
+    ungroup() %>% 
+    mutate(time = lubridate::ymd_hms(paste("2019-01-01", paste0(hour, ":00:00", sep = "")))) %>% 
+    group_by(item, time, totalsales) %>% 
+    summarise() %>% 
+    ungroup()
+  
+  p <- 
+    tmp %>% 
+    ggplot(aes(x = time, y = totalsales)) +
+    scale_x_datetime(date_labels = "%H:%M") +
+    labs(title = "Timeseries of When Your Beer is Most Popular (over all time)",
+         caption = "popular calculated by total sales volume",
+         x = "drinker name",
+         y = "total sales count") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  rm(tmp)
+  
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = item)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
   
 }
 
@@ -400,11 +546,18 @@ t_drinkers_lookup <- function(drinker) {
   
   ensure_tbls()
   
-  tmp <- filter(drinkers, name %in% tbl_df(drinker)[[1]]) %>% 
+  if (nchar(drinker) == 0) {
+    tmp <- drinkers %>% 
+      group_by(name) %>% 
+      arrange(name)
+    return(tmp)
+  } else {
+  tmp <- drinkers %>% 
+    filter(grepl(drinker, name, ignore.case = T)) %>% 
     group_by(name) %>% 
-    arrange(desc(name))
-  
-  return(tmp)
+    arrange(name)
+    return(tmp)
+  }
   
 }
 
@@ -420,7 +573,7 @@ t_drinkers_tsns <- function(drinker) {
     arrange(drinker_name, bar_name, date, time)
   
   return(formattable(tmp,
-                     area(col = c(subtotal, tip, total)) ~ normalize_bar("pink", 0.2)))
+                        area(col = c(subtotal, tip, total)) ~ normalize_bar("pink", 0.2)))
   
 }
 
@@ -436,12 +589,13 @@ t_drinkers_tid <- function(t_id) {
 
 # given a drinker, show bar graph of beers he/she orders the most (the top)
 # requires: beers, bills, transactions
-g_drinkers_beers <- function(drinker, n) {
+g_drinkers_beers <- function(drinker, n, clr) {
   
   ensure_tbls()
   
   # compute total sales per drinker per beer
-  tmp <- left_join(bills, tsns, by = "transaction_id") %>% 
+  tmp <- 
+    left_join(bills, tsns, by = "transaction_id") %>% 
     filter(drinker_name %in% tbl_df(drinker)[[1]]) %>% 
     filter(item %in% beers$name) %>% 
     select(drinker_name,
@@ -453,22 +607,23 @@ g_drinkers_beers <- function(drinker, n) {
     ungroup()
   
   # side-compute: find top beers
-  tmp2 <- tmp %>% 
+  tmp2 <- 
+    tmp %>% 
     group_by(item) %>% 
     summarise(total = sum(sales)) %>% 
     ungroup() %>% 
     top_n(n)
   
   # filter out non-top beers
-  tmp <- tmp %>%
+  tmp <- 
+    tmp %>%
     filter(item %in% tmp2$item)
   
   # plot output
-  p <- tmp %>%
+  p <- 
+    tmp %>%
     arrange(desc(total)) %>% 
     ggplot(aes(x = item, y = total)) +
-    geom_bar(stat = "identity",
-             aes(fill = drinker_name)) +
     labs(title = "Your Drinker(s)'s Favorite Beers",
          caption = "favorite calculated by total sales volume",
          x = "drinker name",
@@ -478,15 +633,45 @@ g_drinkers_beers <- function(drinker, n) {
   
   rm(tmp)
   
-  return(p)
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = drinker_name)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
 }
 
 # given a drinker, bar graph of his/her spending in different bars on different dates/weeks/months.
 # requires: ..., transactions
-g_drinkers_timeseries <- function(drinker) {
+g_drinkers_timeseries <- function(drinker, clr) {
   
   ensure_tbls()
   
-  # TODO
+  tmp <- 
+    tsns %>% 
+    filter(drinker_name %in% tbl_df(drinker)[[1]]) %>% 
+    group_by(drinker_name, bar_name, date) %>% 
+    summarise(total = sum(total))
+  
+  tmp$date <- as.Date(tmp$date)
+  
+  p <- 
+    tmp %>% 
+    ggplot(aes(x = date, y = total)) +
+    labs(title = "Your Drinker(s)'s Spending Patterns",
+         caption = "",
+         x = "drinker name",
+         y = "total sales ($)") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    theme(plot.title = element_text(hjust = 0.5))
+    
+  rm(tmp)
+  
+  if (clr == "YES") {
+    return(p + geom_bar(stat = "identity",
+                        aes(fill = bar_name)))
+  } else {
+    return (p + geom_bar(stat = "identity"))
+  }
   
 }
