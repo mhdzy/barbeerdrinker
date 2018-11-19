@@ -26,13 +26,10 @@ ui <- tagList(fluidPage(
   theme = shinytheme("paper"),
 
   navbarPage("barbeerdrinker!",
-             
 
     # ---------- landing page ---------- #
     tabPanel("home",
-      fluidRow(
-        setBackgroundImage(src = "www/landing_background.jpg")
-      )
+      includeHTML("www/req.html")
     ),
 
     # ---------- bar page ---------- #
@@ -331,36 +328,374 @@ ui <- tagList(fluidPage(
           align = "center",
           width = "100%"),
 
-      tags$br(), tags$br(), tags$br(),
+      tags$br(), tags$br(),
+      
+      tabsetPanel(
+        type = "tabs",
 
-      fluidRow(
-        column(1, dropdownButton(includeMarkdown("www/mod_dropdown.md"),
-                       circle = T,
-                       status = "danger",
-                       icon = icon("question-circle"),
-                       width = "500px",
-                       tooltip = tooltipOptions(title = "help"))
+        tabPanel("custom query",
+                 
+          tags$br(), tags$br(),
+        
+          fluidRow(
+            column(1, 
+              dropdownButton(includeMarkdown("www/mod_dropdown.md"),
+                             circle = T,
+                             status = "danger",
+                             icon = icon("question-circle"),
+                             width = "500px",
+                             tooltip = tooltipOptions(title = "help"))
+              ),
+            
+            column(5,
+              textAreaInput("mod_query",
+                            "click ? for dml command usage",
+                            "insert into table_name (column1, column2, ..., column_n)\nvalues (value1, value2, ..., value_n)",
+                            width = "150%",
+                           rows = 3
+                           ),
+              
+              actionBttn(inputId = "mod_confirm_bttn",
+                            label = "execute",
+                            style = "unite",
+                            color = "danger"
+                            )
+            ) # end column
+          ), # end fluidrow
+
+          tags$br(),
+
+          textOutput("mod_status")
+        
+        ), # end tabpanel
+        
+        tabPanel("bars",
+          box(width = 12, title = "insert into bars table", 
+            fluidRow(splitLayout(
+              
+              textInput(inputId = "bars_name",
+                        label = "name",
+                        value = "",
+                        width = "75%"),
+                   
+              textInput(inputId = "bars_license",
+                        label = "license",
+                        value = "",
+                        width = "75%")
+              )), # layout, row
+            
+            fluidRow(splitLayout(
+              
+              textInput(inputId = "bars_city",
+                       label = "city",
+                       value = "",
+                       width = "80%"),
+            
+              textInput(inputId = "bars_phone",
+                        label = "phone",
+                        value = "",
+                        width = "80%"),
+            
+              textInput(inputId = "bars_addr",
+                        label = "addr",
+                        value = "",
+                        width = "80%")
+                
+              )), # layout, row
+            
+            fluidRow(splitLayout(
+            
+              textInput(inputId = "bars_open",
+                        label = "open",
+                        value = "",
+                        width = "75%"),
+            
+              textInput(inputId = "bars_close",
+                        label = "close",
+                        value = "",
+                        width = "75%")
+              
+              )) # layout, row
+            
+          ), # end box
+          
+          actionBttn(inputId = "mod_bars",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
           ),
-
-        column(5,
-
-               textAreaInput("mod_query",
-                             "click ? for dml command usage",
-                             "insert into table_name (column1, column2, ..., column_n)\nvalues (value1, value2, ..., value_n)",
-                             width = "150%",
-                             rows = 3
-                             ),
-
-               actionBttn(inputId = "mod_confirm_bttn",
-                          label = "execute",
-                          style = "unite",
-                          color = "danger")
-                          )
-      ), # end fluidrow
-
-      tags$br(),
-
-      dataTableOutput("mod_status")
+          
+          tags$br(),
+          
+          textOutput("mod_status_bars")
+          
+        ), # end tabpanel bars
+        
+        tabPanel("beers",
+          box(width = 12, title = "insert into beers table", 
+            
+              fluidRow(splitLayout(
+              textInput(inputId = "beers_name",
+                        label = "name",
+                        value = "",
+                        width = "80%"),
+                 
+              textInput(inputId = "beers_manf",
+                        label = "manufacturer",
+                        value = "",
+                        width = "80%")
+              )), # layout, row
+               
+            fluidRow(splitLayout(
+              textInput(inputId = "beers_rating",
+                        label = "rating",
+                        value = "",
+                        width = "80%"),
+                 
+              textInput(inputId = "beers_abv",
+                        label = "alc. by vol.",
+                        value = "",
+                        width = "80%")
+              
+            )) # layout, row
+          ), # end box
+          
+          actionBttn(inputId = "mod_beers",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_beers")
+          
+        ), # end tabpanel beers
+        
+        tabPanel("bills",
+          box(width = 12, title = "insert into bills table", 
+            
+              fluidRow(splitLayout(
+                textInput(inputId = "bills_tid",
+                          label = "transaction id",
+                          value = "",
+                          width = "60%")
+                )), # layout/row
+                     
+              fluidRow(splitLayout(
+                textInput(inputId = "bills_item",
+                          label = "item",
+                          value = "",
+                          width = "80%"),
+                textInput(inputId = "bills_quantity",
+                          label = "quantity",
+                          value = "",
+                          width = "80%"),
+                textInput(inputId = "bills_price",
+                          label = "price",
+                          value = "",
+                          width = "80%")
+            )) # layout/row
+          ), # box
+          
+          actionBttn(inputId = "mod_bills",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_bills")
+          
+        ), # end tabpanel bills
+        
+        tabPanel("drinkers",
+          box(width = 12, title = "insert into drinkers table", 
+            
+            fluidRow(splitLayout(
+              textInput(inputId = "drinkers_name",
+                        label = "name",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "drinkers_city",
+                        label = "city",
+                        value = "",
+                        width = "80%")
+            )), # layout/row
+            
+            fluidRow(splitLayout(
+              textInput(inputId = "drinkers_phone",
+                        label = "phone",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "drinkers_addr",
+                        label = "address",
+                        value = "",
+                        width = "80%")
+            )) # layout/row
+              
+          ), # box
+          
+          actionBttn(inputId = "mod_drinkers",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_drinkers")
+        ), # end tabpanel drinkers
+        
+        tabPanel("frequents",
+          box(width = 12, title = "insert into frequents table", 
+                     
+            fluidRow(splitLayout(
+              
+              textInput(inputId = "frequents_drinker",
+                        label = "drinker",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "frequents_bar",
+                        label = "bar",
+                        value = "",
+                        width = "80%")
+            )) # layout/row
+            
+          ), # box
+          
+          actionBttn(inputId = "mod_frequents",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_frequents")
+          
+        ), # end tabpanel frequents
+        
+        tabPanel("likes",
+          box(width = 12, title = "insert into likes table", 
+            
+            fluidRow(splitLayout(
+              textInput(inputId = "likes_drinker",
+                        label = "drinker",
+                        value = "",
+                        width = "80%"),
+              
+              textInput(inputId = "likes_beer",
+                        label = "beer",
+                        value = "",
+                        width = "80%")
+              )) # layout/row
+                     
+          ), # box
+          
+          actionBttn(inputId = "mod_likes",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_likes")
+        ), # end tabpanel likes
+        
+        tabPanel("sells",
+          box(width = 12, title = "insert into sells table",
+            
+            fluidRow(splitLayout(
+              textInput(inputId = "sells_bar",
+                        label = "drinker",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "sells_item",
+                        label = "item",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "sells_price",
+                        label = "price",
+                        value = "",
+                        width = "80%")
+              )) # layout/row
+                     
+          ), # box
+          
+          actionBttn(inputId = "mod_sells",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_sells")
+          
+        ), # end tabpanel likes
+        
+        tabPanel("transactions",
+          box(width = 12, title = "insert into transactions table",
+          
+            fluidRow(splitLayout(
+              textInput(inputId = "tsns_tid",
+                        label = "transaction id",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "tsns_drinker_name",
+                        label = "drinker name",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "tsns_bar_name",
+                        label = "bar name",
+                        value = "",
+                        width = "80%")
+            )), # layout/row
+            
+            fluidRow(splitLayout(
+              textInput(inputId = "tsns_time",
+                        label = "transaction time (hh:mm:ss)",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "tsns_date",
+                        label = "transaction date (yyyy-mm-dd)",
+                        value = "",
+                        width = "80%")
+            )), # layout/row
+            
+            fluidRow(splitLayout(
+              textInput(inputId = "tsns_subtotal",
+                        label = "transaction total",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "tsns_tip",
+                        label = "transaction tip",
+                        value = "",
+                        width = "80%"),
+              textInput(inputId = "tsns_total",
+                        label = "transaction total",
+                        value = "",
+                        width = "80%")
+            )) # layout/row
+                     
+          ), # box
+          
+          actionBttn(inputId = "mod_tsns",
+                     label = "execute",
+                     style = "unite",
+                     color = "danger"
+          ),
+          
+          tags$br(),
+          
+          textOutput("mod_status_tsns")
+          
+        ) # end tabpanel transactions
+        
+      ) # end tabset panel
 
     ), # end tabpanel modification
 

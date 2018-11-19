@@ -23,7 +23,173 @@ server <- function(input, output, session) {
   
   update_mod_msg <- eventReactive(input$mod_confirm_bttn, {
     # rules and logic!
-    get_tbl_mod(input$mod_query)
+    d <- get_tbl_mod(input$mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_bars <- eventReactive(input$mod_bars, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+              "bars",
+              input$bars_name,
+              input$bars_license,
+              input$bars_city,
+              input$bars_phone,
+              input$bars_addr,
+              input$bars_open,
+              input$bars_close)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_beers <- eventReactive(input$mod_beers, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s', '%s', '%s')",
+              "beers",
+              input$beers_name,
+              input$beers_manf,
+              input$beers_rating,
+              input$beers_abv)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_bills <- eventReactive(input$mod_bills, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s', '%s', '%s')",
+              "bills",
+              input$bills_tid,
+              input$bills_item,
+              input$bills_quantity,
+              input$bills_price)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_drinkers <- eventReactive(input$mod_drinkers, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s', '%s', '%s')",
+              "drinkers",
+              input$drinkers_name,
+              input$drinkers_city,
+              input$drinkers_phone,
+              input$drinkers_addr)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_frequents <- eventReactive(input$mod_frequents, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s')",
+              "frequents",
+              input$frequents_drinker,
+              input$frequents_bar)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_likes <- eventReactive(input$mod_likes, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s')",
+              "likes",
+              input$likes_drinker,
+              input$likes_beer)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_sells <- eventReactive(input$mod_sells, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s', '%s')",
+              "sells",
+              input$sells_bar,
+              input$sells_item,
+              input$sells_price)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
+  })
+  
+  update_mod_tsns <- eventReactive(input$mod_tsns, {
+    # rules and logic!
+    
+    # construct query from params
+    mod_query <- 
+      sprintf("insert into %s values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
+              "transactions",
+              input$tsns_tid,
+              input$tsns_drinker_name,
+              input$tsns_bar_name,
+              input$tsns_time,
+              input$tsns_date,
+              input$tsns_subtotal,
+              input$tsns_total)
+    
+    d <- get_tbl_mod(mod_query)
+    if (d == "success") {
+      return("success")
+    } else {
+      return(tbl_df(d[[1]])$value)
+    }
   })
   
   update_sql_table <- eventReactive(input$sql_confirm_bttn, {
@@ -42,24 +208,29 @@ server <- function(input, output, session) {
   output$barsTable <- renderDataTable(get_tbl("select * from bars"))
 
   # beers page
-  output$beers_topbars <- renderPlot(g_beers_topbars(input$beer_selection, beer_limit, input$bar_color_selection))
-  output$beers_topdrinkers <- renderPlot(g_beers_topdrinkers(input$beer_selection, beer_limit, input$bar_color_selection))
-  output$beers_timeseries <- renderPlot(g_beers_timeseries(input$beer_selection, beer_limit, input$bar_color_selection))
+  output$beers_topbars <- renderPlot(g_beers_topbars(input$beer_selection, beer_limit, input$beer_color_selection))
+  output$beers_topdrinkers <- renderPlot(g_beers_topdrinkers(input$beer_selection, beer_limit, input$beer_color_selection))
+  output$beers_timeseries <- renderPlot(g_beers_timeseries(input$beer_selection, beer_limit, input$beer_color_selection))
   output$beersTable <- renderDataTable(get_tbl("select * from beers"))
 
   # drinkers page
   output$drinkersLookupTable <- renderDataTable(t_drinkers_lookup(input$lookup_query))
   output$drinkers_tsns <- renderDataTable(t_drinkers_tsns(input$drinker_selection))
   output$drinkers_tid <- renderDataTable(t_drinkers_tid(input$t_id))
-  output$drinkers_topbeers <- renderPlot(g_drinkers_beers(input$drinker_selection, drinker_limit, input$bar_color_selection))
-  output$drinkers_timeseries <- renderPlot(g_drinkers_timeseries(input$drinker_selection, input$bar_color_selection))
+  output$drinkers_topbeers <- renderPlot(g_drinkers_beers(input$drinker_selection, drinker_limit, input$drinker_color_selection))
+  output$drinkers_timeseries <- renderPlot(g_drinkers_timeseries(input$drinker_selection, input$drinker_color_selection))
   output$drinkersTable <- renderDataTable(get_tbl("select * from drinkers"))
 
   # modification page
-  output$mod_status <- renderDataTable(
-    #update_mod_msg()
-    get_tbl("select name as DO_NOT, name as EXECUTE_UPDATES, name as PLEASE from beers where name = 'Bud Lite'")
-  )
+  output$mod_status <- renderText(update_mod_msg())
+  output$mod_status_bars <- renderText(update_mod_bars())
+  output$mod_status_beers <- renderText(update_mod_beers())
+  output$mod_status_bills <- renderText(update_mod_bills())
+  output$mod_status_drinkers <- renderText(update_mod_drinkers())
+  output$mod_status_frequents <- renderText(update_mod_frequents())
+  output$mod_status_likes <- renderText(update_mod_likes())
+  output$mod_status_sells <- renderText(update_mod_sells())
+  output$mod_status_tsns <- renderText(update_mod_tsns())
   
   # custom sql input page
   output$customSQLTable <- renderDataTable(update_sql_table())

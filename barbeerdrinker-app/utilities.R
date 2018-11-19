@@ -25,6 +25,9 @@ get_tbl <- function(query) {
   # connect to database
   pool <- poolConnect()
   
+  query <- gsub("‘", "'", query)
+  query <- gsub("’", "'", query)
+  
   # push query through pool object
   tmp <- tbl_df(dbGetQuery(pool, query))
   
@@ -44,12 +47,16 @@ get_tbl_mod <- function(query) {
   
   # attempt a DML command (requires checks)
   result = tryCatch({
+    
+    query <- gsub("‘", "'", query)
+    query <- gsub("’", "'", query)
+    
     tmp <- tbl_df(dbGetQuery(pool, query))
     
     poolClose(pool)
-    rm(pool)
+    rm(tmp, pool)
     
-    return(tmp)
+    return("success")
   }, warning = function(w) {
     return(w)
   }, error = function(e) {
@@ -63,16 +70,17 @@ get_tbl_mod <- function(query) {
 
 # ensures the proper installation & loading of R packages
 ensure_pkgs <- function() {
-  if (!require(formattable))  { install.packages("formattable");  require(formattable)    }
-  if (!require(markdown))     { install.packages("markdown");     require(markdown)       }
-  if (!require(tidyverse))    { install.packages("tidyverse");    require(tidyverse)      }
-  if (!require(pool))         { install.packages("pool");         require(pool)           }
-  if (!require(RMySQL))       { install.packages("RMySQL");       require(RMySQL)         }
-  if (!require(timevis))      { install.packages("timevis");      require(timevis)        }
-  if (!require(shiny))        { install.packages("shiny");        require(shiny)          }
-  if (!require(shinyjs))      { install.packages("shinyjs");      require(shinyjs)        }
-  if (!require(shinythemes))  { install.packages("shinythemes");  require(shinythemes)    }
-  if (!require(shinyWidgets)) { install.packages("shinyWidgets"); require(shinyWidgets)   }
+  if (!require(formattable))    { install.packages("formattable");    require(formattable)    }
+  if (!require(markdown))       { install.packages("markdown");       require(markdown)       }
+  if (!require(tidyverse))      { install.packages("tidyverse");      require(tidyverse)      }
+  if (!require(pool))           { install.packages("pool");           require(pool)           }
+  if (!require(RMySQL))         { install.packages("RMySQL");         require(RMySQL)         }
+  if (!require(timevis))        { install.packages("timevis");        require(timevis)        }
+  if (!require(shiny))          { install.packages("shiny");          require(shiny)          }
+  if (!require(shinydashboard)) { install.packages("shinydashboard"); require(shinydashboard) }
+  if (!require(shinyjs))        { install.packages("shinyjs");        require(shinyjs)        }
+  if (!require(shinythemes))    { install.packages("shinythemes");    require(shinythemes)    }
+  if (!require(shinyWidgets))   { install.packages("shinyWidgets");   require(shinyWidgets)   }
 }
 
 # ensures the local existence of barbeerdrinker tables
@@ -152,10 +160,13 @@ g_bars_topspenders <- function(bar, n, clr) {
     summarise(drinker_total = sum(total)) %>% 
     ungroup()
   
+  fip <- factor(tmp$drinker_name, levels = unique(tmp$drinker_name))
+  tmp$drinker_name <- fip
+  tmp$drinker_name <- reorder(tmp$drinker_name, tmp$drinker_total)
+  
   # plots output
   p <- 
     tmp %>%
-    arrange(desc(drinker_total)) %>%
     ggplot(aes(x = drinker_name, y = drinker_total)) +
     labs(title = "Drinkers Who Are Largest Spenders",
          caption = "spenders calculated by $ amount spent",
@@ -204,11 +215,14 @@ g_bars_topbeers <- function(bar, n, clr) {
     select(item,
            bar_name,
            sales = item_total)
+  
+  fip <- factor(tmp$item, levels = unique(tmp$item[order(tmp$sales)]), ordered = T)
+  tmp$item <- fip
+  #tmp$item <- reorder(tmp$item, tmp$sales)
     
   # plots output
   p <- 
     tmp %>%
-    arrange(desc(sales)) %>% 
     ggplot(aes(x = item, y = sales)) +
     labs(title = "Most Popular Beers",
          caption = "popularity calculated by total sales in dollars",
