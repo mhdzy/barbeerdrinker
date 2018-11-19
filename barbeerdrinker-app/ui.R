@@ -48,6 +48,12 @@ ui <- tagList(fluidPage(
                       selected = bars$name[1:bar_limit],
                       multiple = TRUE),
           
+          numericInput("bar_n", 
+                       "define 'top':", 
+                       10, 
+                       min = 1, 
+                       max = 60),
+          
           radioGroupButtons(inputId = "bar_color_selection",
                             label = "color",
                             choices = c("YES", "NO"),
@@ -134,7 +140,7 @@ ui <- tagList(fluidPage(
         sidebarPanel(
           pickerInput(inputId = "beer_selection",
                       label = "select beer(s):",
-                      choices = beers$name,
+                      choices = (beers %>% filter(manf != "Food"))$name,
                       options = list(
                         `actions-box` = TRUE,
                         size = 10,
@@ -142,6 +148,13 @@ ui <- tagList(fluidPage(
                       ),
                       selected = beers$name[4:(4+beer_limit-1)],
                       multiple = TRUE),
+          
+          numericInput("beer_n", 
+                       "define 'top':", 
+                       10, 
+                       min = 1, 
+                       max = 60),
+          
           radioGroupButtons(inputId = "beer_color_selection",
                             label = "color",
                             choices = c("YES", "NO"),
@@ -217,6 +230,13 @@ ui <- tagList(fluidPage(
                       ),
                       selected = drinkers$name[1:drinker_limit],
                       multiple = TRUE),
+          
+          numericInput("drinker_n", 
+                       "define 'top':", 
+                       10, 
+                       min = 1, 
+                       max = 1000),
+          
           radioGroupButtons(inputId = "drinker_color_selection",
                             label = "color",
                             choices = c("YES", "NO"),
@@ -269,7 +289,7 @@ ui <- tagList(fluidPage(
               fluidRow(
                 numericInput("t_id",
                              label = "transaction id",
-                             value = 100028,
+                             value = 288448,
                              min = 100000,
                              max = 999999,
                              step = 1
@@ -363,7 +383,7 @@ ui <- tagList(fluidPage(
             ) # end column
           ), # end fluidrow
 
-          tags$br(),
+          tags$br(), tags$br(),
 
           textOutput("mod_status")
         
@@ -425,7 +445,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(), 
           
           textOutput("mod_status_bars")
           
@@ -466,7 +486,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(), 
           
           textOutput("mod_status_beers")
           
@@ -504,7 +524,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(),
           
           textOutput("mod_status_bills")
           
@@ -543,7 +563,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(),
           
           textOutput("mod_status_drinkers")
         ), # end tabpanel drinkers
@@ -571,7 +591,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(),
           
           textOutput("mod_status_frequents")
           
@@ -600,7 +620,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(),
           
           textOutput("mod_status_likes")
         ), # end tabpanel likes
@@ -631,7 +651,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(), 
           
           textOutput("mod_status_sells")
           
@@ -689,7 +709,7 @@ ui <- tagList(fluidPage(
                      color = "danger"
           ),
           
-          tags$br(),
+          tags$br(), tags$br(),
           
           textOutput("mod_status_tsns")
           
@@ -736,7 +756,7 @@ ui <- tagList(fluidPage(
         )
       ),
 
-      tags$br(),
+      tags$br(), tags$br(),
 
       dataTableOutput("customSQLTable")
 

@@ -1,6 +1,9 @@
 <body data-gr-c-s-loaded="true">
   <div class="page">
     <div id="preview-page" class="preview-page" data-autorefresh-url="/__/grip/refresh/">
+
+
+
       <div role="main" class="main-content">
         <div class="container new-discussion-timeline experiment-repo-nav">
           <div class="repository-content">
@@ -17,8 +20,35 @@
 <p>rutgers cs 336 databases project</p>
 <h4>
 <a id="user-content-matthew-handzy-mah376-juan-cruz-jgc112" class="anchor" href="http://localhost:6419/#matthew-handzy-mah376-juan-cruz-jgc112" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Matthew Handzy (mah376), Juan Cruz (jgc112)</h4>
+<h4>
+<a id="user-content-httpsmatthewhandzyshinyappsiobarbeerdrinker-app" class="anchor" href="http://localhost:6419/#httpsmatthewhandzyshinyappsiobarbeerdrinker-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><a href="https://matthewhandzy.shinyapps.io/barbeerdrinker-app/" rel="nofollow">https://matthewhandzy.shinyapps.io/barbeerdrinker-app/</a>
+</h4>
 <h2>
 <a id="user-content-overview" class="anchor" href="http://localhost:6419/#overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Overview</h2>
+<p>We decided to develop our application using R in conjunction with the Shiny library to create a front-end ui, along with an R-powered back-end to create a full-stack application that services our barbeerdrinker AWS RDS instance.</p>
+<p>We used a variety of libraries to accomplish this goal, as base R would not be powerful enough to fulfill all of these requirements.</p>
+<h4>
+<a id="user-content-package-breakdown" class="anchor" href="http://localhost:6419/#package-breakdown" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>package breakdown</h4>
+<p>We used the <code>lubridate</code> package explicitly to format dates and times for proper output. It is included in the <code>tidyverse</code> but requires explicit calls.</p>
+<p>We used the <code>markdown</code> package to compile and output .md files to the ui.</p>
+<p>We used the <code>tidyverse</code> package to crunch all of our numbers and simplify our data analytics. The tidyverse includes a variety of data analytics tools and graphing utilities that helped us create the beautiful barbeerdrinker app hosted on this very site.</p>
+<ul>
+<li>includes: <code>dplyr</code>, <code>forcats</code>, <code>ggplot2</code>, <code>purrr</code>, <code>readr</code>, <code>stringr</code>, <code>tibble</code>, <code>tidyr</code>
+</li>
+</ul>
+<p>We used the <code>pool</code> package to create Shiny-friendly database connection objects.</p>
+<p>We used the <code>RMySQL</code> package to create a MySQL connection in a pool object.</p>
+<p>We used the <code>shiny</code> package to create our Shiny web applciation serving our barbeerdrinker AWS RDS instance.</p>
+<p>We used the <code>shinydashboard</code> package as a supplement to the shiny toolset.</p>
+<p>We used the <code>shinyjs</code> package as a supplement to the shiny toolset.</p>
+<p>We used the <code>shinythemes</code> package to set a theme for our shiny app.</p>
+<p>We used the <code>shinyWidgets</code> package to include a more diverse ui input set.</p>
+<p>We are confident our web application meets all of the requirements set by the specification file (home page).</p>
+<h2>
+<a id="user-content-connecting-to-our-front-end-ui" class="anchor" href="http://localhost:6419/#connecting-to-our-front-end-ui" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Connecting to our front-end UI</h2>
+<h4>
+<a id="user-content-url" class="anchor" href="http://localhost:6419/#url" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>url</h4>
+<p><code>https://matthewhandzy.shinyapps.io/barbeerdrinker-app/</code></p>
 <h2>
 <a id="user-content-connecting-to-our-real-sql-database" class="anchor" href="http://localhost:6419/#connecting-to-our-real-sql-database" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Connecting to our (real) SQL Database</h2>
 <h4>
@@ -43,24 +73,115 @@
 <h4>
 <a id="user-content-home" class="anchor" href="http://localhost:6419/#home" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>home</code>
 </h4>
+<p>Our lovely home landing page outlines all of the base requirements outlined in our project spec. We converted the core design outlines and graph requirements into a markdown file, and displayed as an HTML render of the github markdown style with the command-line utility <code>grip</code> (github readme instant preview).</p>
 <h4>
 <a id="user-content-bar" class="anchor" href="http://localhost:6419/#bar" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>bar</code>
 </h4>
+<p>Our bar tab features several tabs, featuring four graphs and an output of the base table. It also features a multi-select input bar which filters all graphs to include <em>only</em> the bars selected, a top_n numerical input to define the 'top' bar extraction, as well as a toggle for "color". This converts all outputted graphs to feature bar-coloring, breaking down each bar by a common variable to explain more of the data.</p>
+<h6>
+<a id="user-content-top-drinkers-page" class="anchor" href="http://localhost:6419/#top-drinkers-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top drinkers page</h6>
+<p>Our top drinkers page features a graph that calculates drinker expenditures in the database, across all dates and transactions. We extract the 'top' (user-defined) drinkers by $ amount spent, and display the plotted output.</p>
+<p>The color choice breaks down which bar(s) the drinker spent their money at.</p>
+<h6>
+<a id="user-content-top-beers-page" class="anchor" href="http://localhost:6419/#top-beers-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top beers page</h6>
+<p>Our top beers page features a graph that calculates the most popular beers according to the total dollar amount sold. We computed the total sales over all dates and bars, and selected top (user-defined) and display the resulting chart.</p>
+<p>The color choice breaks down which beers were sold at which bars.</p>
+<h6>
+<a id="user-content-top-manfs-page" class="anchor" href="http://localhost:6419/#top-manfs-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top manfs page</h6>
+<p>Our top manufacturers page features a graph that calculates the most popular manufacturers according to the total dollar amount sold, similarly to the top beers page.</p>
+<p>The color choice breaks down which bars the manufacturers sales came from.</p>
+<h6>
+<a id="user-content-timeseries-page" class="anchor" href="http://localhost:6419/#timeseries-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>timeseries page</h6>
+<p>Our timeseries page displays two graphs -- an intra-day look at sales distributions, as well as a weekly chart of sales.</p>
+<p>Our intraday graph highlights the most popular hours of the day across the selected bars, and (spoiler!) as assumed, lunchtime (11am) and happy hour/dinner/evening are the most popular times.</p>
+<p>Our weekly graph highlights the most popular days of the month, and (spoiler!) as assumed, Thurs/Fri/Sat nights are the most popular days of the week.</p>
+<h6>
+<a id="user-content-table-page" class="anchor" href="http://localhost:6419/#table-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>table page</h6>
+<p>Our table page simply outputs the base bars table. This is achieved with a simple SQL query (select * from bars).</p>
 <h4>
 <a id="user-content-beer" class="anchor" href="http://localhost:6419/#beer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>beer</code>
 </h4>
+<p>Our beer tab is similar to our bar page, in that we have a multi-selector input for our beer choices, a top_n filter, and a color choice. We find three unique graph tabs, as well as another table tab.</p>
+<h6>
+<a id="user-content-top-selling-bars-page" class="anchor" href="http://localhost:6419/#top-selling-bars-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top selling bars page</h6>
+<p>Our top selling bars page displays the bars which sell the highest dollar amount among the selected beers.</p>
+<p>The color option details which beers make up the sales at the top bars displayed.</p>
+<h6>
+<a id="user-content-top-buying-drinkers-page" class="anchor" href="http://localhost:6419/#top-buying-drinkers-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top buying drinkers page</h6>
+<p>Our top buying drinkers page displays the drinkers who spend the most amount of money on the selected subset of beers.</p>
+<p>The color option highlights which beers make up each drinker's expenditures.</p>
+<h6>
+<a id="user-content-top-selling-time-page" class="anchor" href="http://localhost:6419/#top-selling-time-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top selling time page</h6>
+<p>Our top selling time page displays the hours at which the selected beers are sold. Total sales count (per unit) are computed per hour and displayed on a timescale.</p>
+<p>The color option detailss which beers contribute to each hours' sales.</p>
+<h6>
+<a id="user-content-table-page-1" class="anchor" href="http://localhost:6419/#table-page-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>table page</h6>
+<p>Our table page simply outputs the base beers table. This is achieved with a simple SQL query (select * from beers).</p>
 <h4>
 <a id="user-content-drinker" class="anchor" href="http://localhost:6419/#drinker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>drinker</code>
 </h4>
+<p>Our drinker tab features a few different style pages, mostly table outputs but includes two graphs. We see the same input selectors as before, including a drinker selection, top_n definition, and a coloring option.</p>
+<h6>
+<a id="user-content-lookup-page" class="anchor" href="http://localhost:6419/#lookup-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>lookup page</h6>
+<p>Our lookup page features a drinker lookup, where a user can enter any string and the resulting table will be all partial string matches with drinker names in the database. For example, the default value of 'albert' returns two drinkers whose names contain the substring 'albert'. This does not filter based on the user selected drinkers, instead, it uses the entire database of drinkers for search. The same functionality exists in the 'table' page at the end of the drinkers tab.</p>
+<h6>
+<a id="user-content-transactions-page" class="anchor" href="http://localhost:6419/#transactions-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>transactions page</h6>
+<p>Our transactions page features a table output of all transactions in the database. There exists a search bar which will search the displayed table for your values. Unlike the lookup page, this table filters based on the user selected inputs.</p>
+<h6>
+<a id="user-content-bill-lookup-pages" class="anchor" href="http://localhost:6419/#bill-lookup-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bill lookup pages</h6>
+<p>Our bill lookup page allows a user to input a particular transaction id, and display all items from that particular transaction. For example, the default value '288448' shows Abel Graziano's transaction at the Clover Club on Nov 16, 2018. Any valid transaction id will return results, and a transaction id not present in the databases will return an empty table.</p>
+<h6>
+<a id="user-content-top-beers-ordered-page" class="anchor" href="http://localhost:6419/#top-beers-ordered-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>top beers ordered page</h6>
+<p>Our top beers ordered page displays a graph of the beers most frequently ordered by the drinkers selected. It is calculated by total sales volume, rather than dollar amount.</p>
+<p>The color option details which drinker(s) in particular contributed to the purchasing of each popular beer.</p>
+<h6>
+<a id="user-content-timeseries-page-1" class="anchor" href="http://localhost:6419/#timeseries-page-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>timeseries page</h6>
+<p>Our timeseries page displays which days the selected drinker(s) racked up a bill at a bar.</p>
+<p>The color option highlights which bars were transacted at during the time period.</p>
+<h6>
+<a id="user-content-table-page-2" class="anchor" href="http://localhost:6419/#table-page-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>table page</h6>
+<p>Our table page simply outputs the base drinkers table. This is achieved with a simple SQL query (select * from drinkers).</p>
 <h4>
 <a id="user-content-modification" class="anchor" href="http://localhost:6419/#modification" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>modification</code>
 </h4>
+<p>Our modification tab displays many pages -- a main page for manual custom SQL queries, and a page for each table in the database for ui-friendly insertions (does not support selections, updates, or deletions on those pages).</p>
+<h6>
+<a id="user-content-custom-query-page" class="anchor" href="http://localhost:6419/#custom-query-page" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>custom query page</h6>
+<p>Our custom query page supports DML commands -- select, insert, update, and delete. Our MySQL RDS has foreign key constraints that are upheld on insertions/deletions/updates, and outputs the success/error messages associated with any DML commands. Select will succeed, but will not output the table. The SQL interface page is used for outputting the results of the select keyword.</p>
+<p>The query is not executed until the button is pressed, and the action resets upon modification of the query. The execution always waits for a button action.</p>
+<h6>
+<a id="user-content-bars-beers-bills-drinkers-frequents-likes-sells-tsns-pages" class="anchor" href="http://localhost:6419/#bars-beers-bills-drinkers-frequents-likes-sells-tsns-pages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>bars, beers, bills, drinkers, frequents, likes, sells, tsns pages</h6>
+<p>Our ui-friendly insertion pages support new (unique) row insertions subject to the foreign key and assertion constraints of our database. Instead of typing an SQL query, users can input each field and execute an insertion query -- the output below will indicate success or failure, and give a reason why.</p>
 <h4>
 <a id="user-content-sql-interface" class="anchor" href="http://localhost:6419/#sql-interface" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>sql interface</code>
 </h4>
+<p>Our SQL interface tab is essentially a limited modification page, mainly servicing selection queries. It's function is primarily to output the tables derived from a select query, but will service all DML commands without proper message/error output handling. This is dangerous and should not be used for insertions, deletions, or updates.</p>
 <h4>
 <a id="user-content-readme" class="anchor" href="http://localhost:6419/#readme" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>readme</code>
 </h4>
+<p>Our readme page displays this exact readme file for in-site viewership and explanation of the application.</p>
+<h3>
+<a id="user-content-rshiny-app" class="anchor" href="http://localhost:6419/#rshiny-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>R/Shiny App</h3>
+<h4>
+<a id="user-content-uir" class="anchor" href="http://localhost:6419/#uir" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>ui.R</code>
+</h4>
+<p>Our UI file defines all on-screen objects, including input selectors, buttons, tabs, pages, graphs, and table outputs.</p>
+<h4>
+<a id="user-content-serverr" class="anchor" href="http://localhost:6419/#serverr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>server.R</code>
+</h4>
+<p>Our server file defines all on-screen outputs, including graphs and tables. It computes necessary outputs in the back-end and prepares them for on-screen display.</p>
+<h4>
+<a id="user-content-utilitiesr" class="anchor" href="http://localhost:6419/#utilitiesr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>utilities.R</code>
+</h4>
+<p>Our utilities file handles all heavy lifting, including library import handling, table importing, and all table and graph generation. It is responsible for all the computation, with each function serving a specific table or graph.</p>
+<h4>
+<a id="user-content-tsnsr" class="anchor" href="http://localhost:6419/#tsnsr" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>tsns.R</code>
+</h4>
+<p>Our tsns file generates transactions using the bills.csv and times.csv files, computing a derived table using the given information. Requires (drinker) name and bar fields to be present in the bills file.</p>
+<h4>
+<a id="user-content-www" class="anchor" href="http://localhost:6419/#www" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>www/</code>
+</h4>
+<p>Our www/ directory holds all media and output files.</p>
 <h3>
 <a id="user-content-sql-database" class="anchor" href="http://localhost:6419/#sql-database" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SQL database</h3>
 <h4>
@@ -70,11 +191,11 @@
 <h4>
 <a id="user-content-beers" class="anchor" href="http://localhost:6419/#beers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>beers</code>
 </h4>
-<p>no change from milestone 2</p>
+<p>included all food items in beers with the identifying tag of manf = 'Food' for all food items. rating and abv columns are also &lt; 0.</p>
 <h4>
 <a id="user-content-bills" class="anchor" href="http://localhost:6419/#bills" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>bills</code>
 </h4>
-<p>TODO</p>
+<p>re-generated with embedded time, frequenting and spending patterns. includes <code>(drinker) name</code> and <code>bar</code> fields for ease of transaction generation. These two columns are easily omitted upon SQL upload and are not an issue whatsoever on a local filesys.</p>
 <h4>
 <a id="user-content-drinkers" class="anchor" href="http://localhost:6419/#drinkers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>drinkers</code>
 </h4>
@@ -90,23 +211,24 @@
 <h4>
 <a id="user-content-sells" class="anchor" href="http://localhost:6419/#sells" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>sells</code>
 </h4>
-<p>no change from milestone 2</p>
+<p>included all food items added to beers with same price constraints</p>
 <h4>
 <a id="user-content-transactions" class="anchor" href="http://localhost:6419/#transactions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>transactions</code>
 </h4>
-<p>TODO</p>
+<p>re-derived from bills</p>
 <h2>
 <a id="user-content-constraints" class="anchor" href="http://localhost:6419/#constraints" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Constraints</h2>
 <h4>
 <a id="user-content-mandatory-constraints" class="anchor" href="http://localhost:6419/#mandatory-constraints" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mandatory constraints:</h4>
 <ul>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled=""> TODO</li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled=""> transactions/bills cannot be issued at times when the given bar is closed</li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> drinkers cannot frequent bars in different state</li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled=""> for every two beers, x and y, different bars may charge differently for x and y but x should either be less expensive than y in ALL bars or more expensive than y in ALL bars</li>
 </ul>
 <h4>
 <a id="user-content-custom-constraints" class="anchor" href="http://localhost:6419/#custom-constraints" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>custom constraints:</h4>
 <ul>
 <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> proper distribution of bars between tri-state area states</li>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> [[juan]]</li>
 <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> not every drinker frequents a bar</li>
 <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> not every drinker likes beer</li>
 <li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" checked="" disabled=""> not every bar sells all beers</li>
@@ -114,11 +236,6 @@
 </ul>
 <h2>
 <a id="user-content-patterns" class="anchor" href="http://localhost:6419/#patterns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Patterns</h2>
-<h4>
-<a id="user-content-mandatory-patterns" class="anchor" href="http://localhost:6419/#mandatory-patterns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>mandatory patterns:</h4>
-<ul>
-<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled=""> TODO</li>
-</ul>
 <h4>
 <a id="user-content-custom-patterns" class="anchor" href="http://localhost:6419/#custom-patterns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>custom patterns:</h4>
 <ul>

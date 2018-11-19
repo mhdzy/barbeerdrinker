@@ -5,8 +5,8 @@ account: matthewhandzy
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 543158
-bundleId: 1707971
+bundleId: 1708136
 url: https://matthewhandzy.shinyapps.io/barbeerdrinker-app/
-when: 1542591678.22934
+when: 1542601203.12865
 asMultiple: FALSE
 asStatic: FALSE

@@ -70,7 +70,6 @@ get_tbl_mod <- function(query) {
 
 # ensures the proper installation & loading of R packages
 ensure_pkgs <- function() {
-  if (!require(formattable))    { install.packages("formattable");    require(formattable)    }
   if (!require(markdown))       { install.packages("markdown");       require(markdown)       }
   if (!require(tidyverse))      { install.packages("tidyverse");      require(tidyverse)      }
   if (!require(pool))           { install.packages("pool");           require(pool)           }
@@ -350,7 +349,7 @@ g_bars_timeseries_day <- function(bar, n, clr) {
     scale_x_datetime(date_labels = "%H:%M") +
     labs(title = "Timeseries of Most Popular Hours",
          caption = "popular calculated by total transactions / hour",
-         x = "drinker name",
+         x = "hour",
          y = "total transactions count") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     theme(plot.title = element_text(hjust = 0.5))
@@ -535,9 +534,9 @@ g_beers_timeseries <- function(beer, n, clr) {
     ggplot(aes(x = time, y = totalsales)) +
     scale_x_datetime(date_labels = "%H:%M") +
     labs(title = "Timeseries of When Your Beer is Most Popular (over all time)",
-         caption = "popular calculated by total sales volume",
-         x = "drinker name",
-         y = "total sales count") +
+         caption = "popular calculated by transactions / hour",
+         x = "hour",
+         y = "total transactions") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     theme(plot.title = element_text(hjust = 0.5))
   
@@ -586,8 +585,7 @@ t_drinkers_tsns <- function(drinker) {
     group_by(drinker_name, bar_name) %>% 
     arrange(drinker_name, bar_name, date, time)
   
-  return(formattable(tmp,
-                        area(col = c(subtotal, tip, total)) ~ normalize_bar("pink", 0.2)))
+  return(tmp)
   
 }
 
@@ -597,7 +595,7 @@ t_drinkers_tid <- function(t_id) {
   
   ensure_tbls()
   
-  return(formattable(bills %>% filter(transaction_id %in% tbl_df(t_id)[[1]])))
+  return(bills %>% filter(transaction_id %in% tbl_df(t_id)[[1]]))
   
 }
 
@@ -640,7 +638,7 @@ g_drinkers_beers <- function(drinker, n, clr) {
     ggplot(aes(x = item, y = total)) +
     labs(title = "Your Drinker(s)'s Favorite Beers",
          caption = "favorite calculated by total sales volume",
-         x = "drinker name",
+         x = "beer name",
          y = "total sales volume") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     theme(plot.title = element_text(hjust = 0.5))
@@ -674,7 +672,7 @@ g_drinkers_timeseries <- function(drinker, clr) {
     ggplot(aes(x = date, y = total)) +
     labs(title = "Your Drinker(s)'s Spending Patterns",
          caption = "",
-         x = "drinker name",
+         x = "day",
          y = "total sales ($)") +
     theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
     theme(plot.title = element_text(hjust = 0.5))
